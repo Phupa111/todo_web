@@ -15,7 +15,7 @@ const signUpSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
-
+const apiUrl = import.meta.env.VITE_API_URL;
 const SignUp = () => {
   const {
     register,
@@ -35,10 +35,7 @@ const SignUp = () => {
     };
 
     try {
-      const response = await axios.post(
-        "http://localhost:5081/api/Users",
-        payload
-      );
+      const response = await axios.post(`${apiUrl}/api/Users`, payload);
       console.log("Success:", response.data);
       // Optional: Show success toast, redirect, etc.
     } catch (err) {

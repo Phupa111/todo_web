@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const LandingPage = () => {
   return (
@@ -13,9 +14,12 @@ const LandingPage = () => {
           The easiest and most powerful way to manage your tasks, stay
           productive, and get things done — anytime, anywhere.
         </p>
-        <button className="bg-yellow-300 text-blue-900 font-semibold px-6 py-3 rounded-lg hover:bg-yellow-400 transition duration-300">
-          Get Started
-        </button>
+        <Link to="/login">
+          {" "}
+          <button className="bg-yellow-300 text-blue-900 font-semibold px-6 py-3 rounded-lg hover:bg-yellow-400 transition duration-300">
+            Get Started
+          </button>
+        </Link>
       </header>
 
       {/* Features Section */}
