@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 function Footer() {
   return (
     <footer className="bg-gray-900 text-white py-8">

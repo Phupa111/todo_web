@@ -1,16 +1,14 @@
 import { useState, useEffect } from "react";
 import { Plus, Loader2 } from "lucide-react";
-
 import {
   deleteTodo,
   getTodosByOwnerId,
   getTodosById,
+  editTodoById,
 } from "../../services/todoapi";
 import { useAuth } from "../../contexts/AuthContext";
 import TaskModal from "../../components/modal/modal";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-
-const apiUrl = import.meta.env.VITE_API_URL;
 
 const ToDoPage = () => {
   const { user, isLoggedIn } = useAuth();
@@ -21,10 +19,9 @@ const ToDoPage = () => {
   const [pageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [isEdit, setIsEdit] = useState(false);
+  const [currentTodo, setCurrentTodo] = useState(null);
 
-  const [todo, setTodo] = useState([]);
   useEffect(() => {
     const fetchTodos = async () => {
       if (!isLoggedIn || !user?.user.id) {
@@ -36,12 +33,11 @@ const ToDoPage = () => {
       setLoading(true);
       try {
         const response = await getTodosByOwnerId(user.user.id, page, pageSize);
-        console.log("res", response.data);
         setTodos(response.data.items);
         setTotalPages(response.data.totalPages);
         setError(null);
       } catch (err) {
-        setError(err.response?.data || "Failed to fetch tasks");
+        setError(err.response?.data?.message || "Failed to fetch tasks");
         setTodos([]);
       } finally {
         setLoading(false);
@@ -62,7 +58,7 @@ const ToDoPage = () => {
       setTodos(todos.filter((todo) => todo.id !== todoId));
       setError(null);
     } catch (err) {
-      setError(err.response?.data || "Failed to delete task");
+      setError(err.response?.data?.message || "Failed to delete task");
     }
   };
 
@@ -72,11 +68,33 @@ const ToDoPage = () => {
 
     try {
       const response = await getTodosById(todoId);
-
-      setTodo(response.data);
+      setCurrentTodo(response.data);
     } catch (err) {
       console.error(err);
-      setError("Failed to Edit");
+      setError("Failed to load task for editing");
+    }
+  };
+
+  const handleToggleDone = async (todo) => {
+    if (!user?.user?.id) {
+      setError("Please log in to edit tasks.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const updatedTodo = {
+        ...todo,
+        isDone: !todo.isDone,
+      };
+
+      const response = await editTodoById(todo.id, updatedTodo);
+      setTodos(todos.map((t) => (t.id === todo.id ? response.data : t)));
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.message || "Failed to update task status");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -135,8 +153,8 @@ const ToDoPage = () => {
                   <input
                     type="checkbox"
                     checked={todo.isDone}
-                    className="w-5 h-5 text-purple-600"
-                    readOnly
+                    onChange={() => handleToggleDone(todo)}
+                    className="w-5 h-5 text-purple-600 cursor-pointer"
                   />
                   <span
                     className={`text-lg ${
@@ -150,7 +168,7 @@ const ToDoPage = () => {
                 </div>
                 <div className="flex flex-row gap-4">
                   <button
-                    onClick={() => handleEdit(todo.id)} // ใส่ฟังก์ชัน handleEdit ที่รับ todo object ไปแก้ไข
+                    onClick={() => handleEdit(todo.id)}
                     className="text-sm text-blue-500 hover:underline"
                   >
                     <EditOutlined />
@@ -188,7 +206,11 @@ const ToDoPage = () => {
         </div>
 
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            setIsModalOpen(true);
+            setIsEdit(false);
+            setCurrentTodo(null);
+          }}
           className="flex items-center gap-2 mt-6 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition"
         >
           <Plus size={20} />
@@ -199,9 +221,11 @@ const ToDoPage = () => {
         isOpen={isModalOpen}
         isEdit={isEdit}
         onClose={() => {
-          setIsModalOpen(false), setIsEdit(false);
+          setIsModalOpen(false);
+          setIsEdit(false);
+          setCurrentTodo(null);
         }}
-        todo={todo}
+        todo={currentTodo}
         setTodos={setTodos}
       />
     </div>

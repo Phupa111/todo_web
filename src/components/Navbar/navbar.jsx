@@ -6,7 +6,7 @@ const NavbarApp = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const { isLoggedIn, logout } = useAuth();
-  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -14,7 +14,7 @@ const NavbarApp = () => {
     try {
       setIsLoading(true);
       await logout();
-      setIsLogoutDialogOpen(false);
+
       navigate("/login", { replace: true });
     } catch (err) {
       console.error("Logout failed", err);
