@@ -1,18 +1,34 @@
-const FormInput = ({ register, title, name, type, placeholder, error }) => {
+const FormInput = ({
+  register,
+  title,
+  name,
+  type,
+  placeholder,
+  error,
+  isTextArea = false,
+  value = "",
+}) => {
   return (
-    <div className="mb-2">
-      <label className="block text-gray-700 font-medium">{title}</label>
-      <input
-        {...register(name)}
-        type={type}
-        placeholder={placeholder}
-        className={`w-full px-4 py-2 mt-1 border ${
-          error ? "border-red-500" : "border-gray-300"
-        } rounded-lg focus:outline-none focus:ring-2 ${
-          error ? "focus:ring-red-400" : "focus:ring-blue-400"
-        }`}
-      />
-      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+    <div className="flex flex-col space-y-1">
+      <label className="font-semibold text-gray-700">{title}</label>
+      {isTextArea ? (
+        <textarea
+          {...register(name)}
+          placeholder={placeholder}
+          defaultValue={value}
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          rows={4}
+        />
+      ) : (
+        <input
+          {...register(name)}
+          type={type}
+          defaultValue={value}
+          placeholder={placeholder}
+          className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+        />
+      )}
+      {error && <p className="text-sm text-red-500">{error}</p>}
     </div>
   );
 };

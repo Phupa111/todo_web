@@ -5,19 +5,23 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  // ลองโหลด user จาก localStorage ตอนเริ่มต้นแอป
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser =
+      localStorage.getItem("user") || sessionStorage.getItem("user");
+
     if (storedUser) setUser(JSON.parse(storedUser));
   }, []);
 
-  const login = async (userData) => {
-    localStorage.setItem("user", JSON.stringify(userData));
+  const login = async (userData, rememberMe = false) => {
+    const storage = rememberMe ? localStorage : sessionStorage;
+    storage.setItem("user", JSON.stringify(userData));
     setUser(userData);
+    console.log("Logged in:", userData, "Remember me:", rememberMe);
   };
 
   const logout = () => {
     localStorage.removeItem("user");
+    sessionStorage.removeItem("user");
     setUser(null);
   };
 
@@ -28,5 +32,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Hook สำหรับใช้ใน components อื่น
 export const useAuth = () => useContext(AuthContext);
