@@ -37,7 +37,7 @@ const ToDoPage = () => {
         setTotalPages(response.data.totalPages);
         setError(null);
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to fetch tasks");
+        //setError(err.response?.data?.message || "Failed to fetch tasks");
         setTodos([]);
       } finally {
         setLoading(false);
