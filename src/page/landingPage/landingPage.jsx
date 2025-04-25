@@ -7,8 +7,7 @@ const LandingPage = () => {
       {/* Hero Section */}
       <header className="flex flex-col items-center justify-center flex-1 px-6 text-center">
         <h1 className="text-4xl md:text-6xl font-bold mb-4">
-          Organize Your Life with{" "}
-          <span className="text-yellow-300">TaskFlow</span>
+          Organize Your Life with <span className="text-yellow-300">To-Do</span>
         </h1>
         <p className="text-lg md:text-xl mb-6 max-w-2xl">
           The easiest and most powerful way to manage your tasks, stay

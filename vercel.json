@@ -1,0 +1,26 @@
+{
+  "router": [
+    {
+      "src": "/",
+      "dest": "/"
+    },
+    {
+      "src": "/login",
+      "dest": "/"
+    },
+
+    {
+      "src": "/sing-up",
+      "dest": "/"
+    },
+
+    {
+      "src": "/todo",
+      "dest": "/"
+    },
+    {
+      "src": "/user/todo",
+      "dest": "/"
+    }
+  ]
+}
